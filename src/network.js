@@ -21,5 +21,6 @@ export class Channel {
 
   addNode(node) {
       this.nodes.push(node);
+      node.channel = this;
   }
 }
