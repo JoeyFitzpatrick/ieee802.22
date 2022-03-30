@@ -1,23 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Node } from "./network";
 
 function App() {
+  const nodes = [];
+  for (let i = 0; i < 5; i++) {
+    nodes.push(new Node(`n${i}`, [], i));
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {nodes.map((node) => {
+        return <div>{node.name}</div>;
+      })}
     </div>
   );
 }
