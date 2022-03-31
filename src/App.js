@@ -1,41 +1,84 @@
 import "./App.css";
 import { Node, Channel } from "./network";
+import { useState, useEffect } from "react";
+import Nav from "./Nav";
+import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
-  const channels = [];
-  for (let i = 0; i < 10; i++) {
-    channels.push(new Channel(`channel ${i}`, []));
-  }
-  
-  const len = channels.length;
+  const [nodes, setNodes] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [len, setLen] = useState(0);
 
   const randomChannel = (numChannels) => {
     return Math.floor(Math.random() * numChannels);
-  }
+  };
 
   const changeChannel = (node, numChannels) => {
     const switchVal = Math.random();
-    if ((numChannels - 1)/numChannels > switchVal) {
-        // This changes the channel on the Node, may need to do stuff with Channel class too
-        node.channel = channels[randomChannel(len)];
+    if ((numChannels - 1) / numChannels > switchVal) {
+      node.channel = channels[randomChannel(len)];
     }
-}
+  };
 
-  const nodes = [];
-  for (let i = 0; i < 5; i++) {
-    nodes.push(new Node(`node ${i}`, null, []));
-  }
+  const setupNetwork = (numNodes, numChannels) => {
+    setChannels([]);
+    setNodes([]);
+    setLen(0);
+    for (let i = 0; i < numChannels; i++) {
+      let channelsCopy = channels;
+      channelsCopy.push(new Channel(`channel ${i}`, []));
+      setChannels(channelsCopy);
+    }
+    setLen(channels.length);
 
-  nodes.forEach(node => {
-    channels[randomChannel(len)].addNode(node);
-    // changeChannel(node, len)
-  });
+    for (let i = 0; i < numNodes; i++) {
+      let nodesCopy = nodes;
+      nodesCopy.push(new Node(`node ${i}`, null, []));
+      setNodes(nodesCopy);
+    }
+
+    nodes.forEach((node) => {
+      channels[randomChannel(channels.length)].addNode(node);
+    });
+  };
+
+  const getChannelNodes = (channel) => {
+    return channel.nodes.map((node) => {
+      return <p>{node.name}</p>;
+    });
+  };
+
+  const getBackgroundColor = (channel) => {
+    if (channel.nodes.length === 0) {
+      return "gray";
+    }
+    if (channel.nodes.length === 1) {
+      return "green";
+    }
+    if (channel.nodes.length > 1) {
+      return "red";
+    }
+  };
+
+  useEffect(() => {
+    setupNetwork(5, 10);
+  }, []);
 
   return (
     <div className="App">
-      {nodes.map((node) => {
-        return <div>{node.name}: {node.channel.name}</div>;
-      })}
+      <Nav />
+      <div className="main-container">
+        <div className="main-grid">
+          {channels.map((channel) => {
+            return (
+              <div className="grid-item" style={{backgroundColor: getBackgroundColor(channel)}}>
+                {channel.name}
+                {getChannelNodes(channel)}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
