@@ -1,6 +1,6 @@
 import React from "react";
 
-const Nav = () => {
+const Nav = ({ startAlgorithm }) => {
   return (
     <nav>
       <h3>Strategic Channel Access in IEEE 802.22 Networks</h3>
@@ -19,6 +19,13 @@ const Nav = () => {
       >
         Reset Network
       </button>
+      <button type="button" 
+      className="btn btn-primary"
+      onClick={startAlgorithm}
+      >
+        Start Algorithm
+      </button>
+
     </nav>
   );
 };

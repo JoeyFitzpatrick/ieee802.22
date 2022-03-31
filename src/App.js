@@ -13,11 +13,38 @@ function App() {
     return Math.floor(Math.random() * numChannels);
   };
 
-  const changeChannel = (node, numChannels) => {
+  const changeChannel = (channel, channelsArray) => {
     const switchVal = Math.random();
-    if ((numChannels - 1) / numChannels > switchVal) {
-      node.channel = channels[randomChannel(len)];
+    const numChannels = channelsArray.length;
+    if (channel.nodes.length > 1) {
+      channel.nodes.forEach(node => {
+        if ((numChannels - 1) / numChannels > switchVal) {
+          channel.removeNode(node);
+          channelsArray[randomChannel(len)].addNode(node)
+        }
+      })
     }
+  };
+
+  const switchAlgo = () => {
+    let solutionFound = false;
+      console.log("iterate loop")
+      console.log(channels)
+      let nodesCopy = nodes;
+      let channelsCopy = channels;
+      channelsCopy.forEach((channel) => {
+        changeChannel(channel, channelsCopy);
+      });
+      setNodes(nodesCopy);
+      setChannels(channelsCopy);
+      if (channels.some((channel) => channel.nodes.length > 1)) {
+        solutionFound = false;
+      } else {
+        solutionFound = true;
+      }
+      if(!solutionFound) {
+        setInterval(switchAlgo, 500);
+      }
   };
 
   const setupNetwork = (numNodes, numChannels) => {
@@ -61,17 +88,20 @@ function App() {
   };
 
   useEffect(() => {
-    setupNetwork(5, 10);
+    setupNetwork(5, 6);
   }, []);
 
   return (
     <div className="App">
-      <Nav />
+      <Nav startAlgorithm={switchAlgo} />
       <div className="main-container">
         <div className="main-grid">
           {channels.map((channel) => {
             return (
-              <div className="grid-item" style={{backgroundColor: getBackgroundColor(channel)}}>
+              <div
+                className="grid-item"
+                style={{ backgroundColor: getBackgroundColor(channel) }}
+              >
                 {channel.name}
                 {getChannelNodes(channel)}
               </div>
