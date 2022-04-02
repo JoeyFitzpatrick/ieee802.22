@@ -13,38 +13,38 @@ function App() {
     return Math.floor(Math.random() * numChannels);
   };
 
-  const changeChannel = (channel, channelsArray) => {
+  const changeChannels = (channelsArray) => {
+    console.log("change channel");
     const switchVal = Math.random();
     const numChannels = channelsArray.length;
-    if (channel.nodes.length > 1) {
-      channel.nodes.forEach(node => {
-        if ((numChannels - 1) / numChannels > switchVal) {
-          channel.removeNode(node);
-          channelsArray[randomChannel(len)].addNode(node)
-        }
-      })
-    }
+    channelsArray.map((channel) => {
+      if (channel.nodes.length > 1) {
+        channel.nodes.map((node) => {
+          if ((numChannels - 1) / numChannels > switchVal) {
+            channel.removeNode(node);
+            channelsArray[randomChannel(numChannels)].addNode(node);
+          }
+          return node
+        });
+      }
+      return channel;
+    });
+    return channelsArray;
   };
 
   const switchAlgo = () => {
-    let solutionFound = false;
-      console.log("iterate loop")
-      console.log(channels)
-      let nodesCopy = nodes;
-      let channelsCopy = channels;
-      channelsCopy.forEach((channel) => {
-        changeChannel(channel, channelsCopy);
-      });
-      setNodes(nodesCopy);
+    const intervalId = setInterval(() => {
+      console.log("iterate loop");
+      // let channelsCopy = channels;
+      // channelsCopy.forEach((channel) => {
+      //   changeChannel(channel, channelsCopy);
+      // });
+      let channelsCopy = changeChannels(channels);
       setChannels(channelsCopy);
-      if (channels.some((channel) => channel.nodes.length > 1)) {
-        solutionFound = false;
-      } else {
-        solutionFound = true;
+      if (channels.every((channel) => channel.nodes.length <= 1)) {
+        clearInterval(intervalId)
       }
-      if(!solutionFound) {
-        setInterval(switchAlgo, 500);
-      }
+    }, 500);
   };
 
   const setupNetwork = (numNodes, numChannels) => {
@@ -89,6 +89,14 @@ function App() {
 
   useEffect(() => {
     setupNetwork(5, 6);
+  }, []);
+
+  const [count, setCount] = useState([1, 2, 3]);
+
+  useEffect(() => {
+    setInterval(() => {
+      setCount(prevCount => prevCount.map(item => item += 1));
+    }, 500);
   }, []);
 
   return (

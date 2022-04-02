@@ -1,7 +1,8 @@
 export class Node {
   constructor(name, channel, neighbors) {
     this.name = name;
-    this.channel = channel;
+    // this.channel = channel;
+    this.channel = null;
     this.neighbors = neighbors;
   }
 }
@@ -21,6 +22,6 @@ export class Channel {
 
   addNode(node) {
       this.nodes.push(node);
-      node.channel = this;
+      // node.channel = this;
   }
 }
