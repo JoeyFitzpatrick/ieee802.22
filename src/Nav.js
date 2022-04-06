@@ -4,14 +4,9 @@ const Nav = ({ startAlgorithm, changeEnvironment }) => {
   return (
     <nav>
       <h3>Strategic Channel Access in IEEE 802.22 Networks</h3>
-      <button type="button" className="btn btn-primary">
-        Login
-      </button>
-      <button type="button" className="btn btn-primary">
-        Logout
-      </button>
       <button
         type="button"
+        style={{margin: "1%"}}
         className="btn btn-primary"
         onClick={() => {
           window.location.reload(false);
@@ -21,6 +16,7 @@ const Nav = ({ startAlgorithm, changeEnvironment }) => {
       </button>
       <button
         type="button"
+        style={{margin: "1%"}}
         className="btn btn-primary"
         onClick={startAlgorithm}
       >
@@ -28,6 +24,7 @@ const Nav = ({ startAlgorithm, changeEnvironment }) => {
       </button>
       <button
         type="button"
+        style={{margin: "1%"}}
         className="btn btn-primary"
         onClick={changeEnvironment}
       >
